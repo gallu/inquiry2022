@@ -1,0 +1,33 @@
+create database inquiry2022;
+grant all on inquiry2022.* to inquiry2022user@localhost identified by 'inquiry2022pass';
+
+CREATE TABLE inquiries (
+    inquiry_id SERIAL ,
+    name VARCHAR(1024) NOT NULL DEFAULT '' COMMENT '問い合わせ者名',
+    email VARBINARY(254) NOT NULL DEFAULT '' COMMENT '問い合わせ者email',
+    tel VARBINARY(20) NOT NULL DEFAULT '' COMMENT '問い合わせ者tel',
+    body TEXT COMMENT '問い合わせ本文',
+    created_at DATETIME NOT NULL COMMENT '問い合わせした日時',
+    reply_at DATETIME COMMENT '返信した日時(NULL許可)',
+    reply_charge VARCHAR(64) COMMENT '担当者',
+    reply_subject VARCHAR(256) COMMENT '返信タイトル',
+    reply_body TEXT COMMENT '返信本文',
+    PRIMARY KEY(inquiry_id)
+)CHARACTER SET 'utf8mb4', COMMENT='1レコードが「1ユーザからの1回の問い合わせ」を意味するテーブル';
+
+
+CREATE TABLE admin_users (
+    admin_user_id SERIAL,
+    login_id VARBINARY(128) NOT NULL COMMENT 'ログイン用のID',
+    password VARBINARY(255) NOT NULL COMMENT 'ログイン用のパスワード(hashed)',
+    -- name
+    UNIQUE KEY (login_id), -- login_idが重複されても困るから
+    PRIMARY KEY(admin_user_id)
+)CHARACTER SET 'utf8mb4', COMMENT='1レコードが「1管理者」を意味するテーブル';
+-- admin / root
+INSERT admin_users SET login_id='admin', password='$2y$12$JXimn08lAs8A.RTc8uVtQegucc7RBHg2hyOTXtH62kmZ2BX.S/bvu'; -- root
+
+-- 
+ALTER TABLE admin_users ADD error_count INT UNSIGNED DEFAULT 0 COMMENT 'パスワードのエラー回数';
+-- 
+ALTER TABLE admin_users ADD lock_datetime DATETIME DEFAULT NULL COMMENT 'ロック時間(非ロック状態ならNULL)';

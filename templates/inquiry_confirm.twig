@@ -1,0 +1,13 @@
+{# inquiry_confirm.twig #}
+<!doctype html>
+<h1>問い合わせ 確認</h1>
+お名前(*):{{ data.name }}<br>
+連絡先メール:{{ data.email }}<br>
+連絡先電話番号:{{ data.tel }}<br>
+問い合わせ内容(*)<br>
+<pre>
+{{ data.body }}
+</pre>
+<form action="./inquiry_fin.php" method="POST">
+    <button>問い合わせる</button>
+</form>

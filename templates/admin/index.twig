@@ -1,0 +1,34 @@
+{# index.twig #}
+
+{# テンプレートを継承 #}
+{% extends 'admin/layout.twig' %}
+
+{# タイトル #}
+{% block title %}ログイン{% endblock %}
+
+{# コンテンツ本体 #}
+{% block body %}
+        <h1>管理画面 ログイン</h1>
+
+        {% if flash.auth_error == true %}
+            <div class="alert alert-danger">ログインでエラーです</div>
+        {% endif %}
+
+        <form action="./login.php" method="post">
+          <div class="mb-3 row">
+            <label for="staticEmail" class="col-sm-2 col-form-label">ログインID</label>
+            <div class="col-sm-5">
+              <input name="id" type="text" class="form-control" id="staticEmail" value="{{ flash.id }}" required>
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+            <div class="col-sm-5">
+              <input name="pw" type="password" class="form-control" id="inputPassword" required>
+            </div>
+          </div>
+          <br>
+          <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
+          <button class="btn btn-primary mb-3">ログイン</button>
+        </form>
+{% endblock %}

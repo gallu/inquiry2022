@@ -1,0 +1,71 @@
+{# detail.twig #}
+
+{# テンプレートを継承 #}
+{% extends 'admin/layout.twig' %}
+
+{# タイトル #}
+{% block title %}問い合わせ詳細{% endblock %}
+
+{# コンテンツ本体 #}
+{% block body %}
+        <h1>管理画面</h1>
+        <h2>問い合わせ詳細</h2>
+{% if flash.message.reply_success == true %}
+問い合わせの返信をしました！！！！<br>
+{% endif %}
+{% if flash.error.csrf == true %}
+画面遷移に誤りがあります(csrf)。<br>
+{% endif %}
+
+        <table class="table table-hover">
+        <tr>
+            <th>id
+            <td>{{ inquiry.inquiry_id }}
+        <tr>
+            <th>受付日時
+            <td>{{ inquiry.created_at }}
+        <tr>
+            <th>お名前
+            <td>{{ inquiry.name }}
+        <tr>
+            <th>email
+            <td>{{ inquiry.email }}
+        <tr>
+            <th>tel
+            <td>{{ inquiry.tel }}
+        <tr>
+            <th>問い合わせ内容
+            <td>{{ inquiry.body | nl2br }}
+        <tr>
+            <th>返信した日時
+            <td>{{ inquiry.reply_at }}
+        <tr>
+            <th>返信担当者
+            <td>{{ inquiry.reply_charge }}
+        <tr>
+            <th>返信タイトル
+            <td>{{ inquiry.reply_subject }}
+        <tr>
+            <th>返信本文
+            <td>{{ inquiry.reply_body }}
+        </table>
+
+        <a name="reply"></a>
+        <h2>返信</h2>
+        {% if flash.error.validate == true %}
+        未入力項目があります<br>
+        {% endif %}
+        {% if flash.error.already_replied == true %}
+        既に返信済です<br>
+        {% endif %}
+        
+        <form action="./reply.php" method="post">
+            <input type="hidden" name="id" value="{{ inquiry.inquiry_id }}"><br>
+            <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
+            担当者名<input name="reply_charge" value="{{ flash.datum.reply_charge }}"><br>
+            返信タイトル<input name="reply_subject" value="{{ flash.datum.reply_subject }}"><br>
+            返信本文<textarea name="reply_body">{{ flash.datum.reply_body }}</textarea><br>           <button class="btn btn-primary">返信する</a>
+        </form>
+
+
+{% endblock %}

@@ -1,0 +1,60 @@
+{# top.twig #}
+
+{# テンプレートを継承 #}
+{% extends 'admin/layout.twig' %}
+
+{# タイトル #}
+{% block title %}問い合わせ一覧{% endblock %}
+
+{# コンテンツ本体 #}
+{% block body %}
+        <h1>管理画面</h1>
+
+        <h2>検索</h2>
+        <form action="./top.php" method="get">
+        ・お名前(部分一致) <input name="name" value="{{ name }}"><br>
+        ・email(部分一致) <input name="email" value="{{ email }}"><br>
+        ・tel（完全一致) <input name="tel" value="{{ tel }}"><br>
+        ・受付日付 from<input type="date" name="from_at" value="{{ from_at }}">
+                  ～to<input type="date" name="to_at"  value="{{ to_at }}"> <br>
+        ・返信の未済: <label><input type="checkbox" name="reply[]" value="0" {% if 0 in reply %}checked{% endif %}>未返信</label>
+                  , <label><input type="checkbox" name="reply[]" value="1" {% if 1 in reply %}checked{% endif %}>返信済</label><br>
+        <button class="btn btn-light">検索する</button>
+        </form>
+
+        <h2>問い合わせ一覧</h2>
+{# urlエスケープは2種類の書き方があるので、どっちでもよい(以下は、勉強用にあえて別々に書いた) #}
+{% if 0 < newer_page_num %} 
+<a href="./top.php?{{ search_params }}&p={{ newer_page_num|e('url') }}">＜＜新しいほう</a>
+{% else %}
+＜＜新しいほう
+{% endif %}
+ | 
+{% if true == newer_flg %} 
+<a href="./top.php?{{ search_params }}&p={{ older_page_num|url_encode }}">古いほう＞＞</a>
+{% else %}
+古いほう＞＞
+{% endif %}
+
+        <table class="table table-hover">
+        <tr>
+          <th>id
+          <th>受付日時
+          <th>お名前
+          <th>email
+          <th>tel
+          <th>問い合わせ内容
+
+{% for v in inquiry %}
+        <tr>
+          <td>{{ v.inquiry_id }}
+          <td>{{ v.created_at }}
+          <td>{{ v.name }}
+          <td>{{ v.email }}
+          <td>{{ v.tel  }}
+          <td>{{ v.body|slice(0, 10) }}...
+          <td><a href="./detail.php?id={{ v.inquiry_id | url_encode }}" class="btn btn-primary">返信</a>
+{% endfor %}
+
+        </table>
+{% endblock %}
